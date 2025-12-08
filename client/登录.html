@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎回来 - 宇境工作室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('./注册与登录背景图片.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6a89cc, #4a69bd);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .form-container {
+            padding: 35px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        input:focus {
+            border-color: #6a89cc;
+            box-shadow: 0 0 0 3px rgba(106, 137, 204, 0.2);
+            outline: none;
+            background: white;
+        }
+        
+        input.valid {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.05);
+        }
+        
+        input.invalid {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.05);
+        }
+        
+        .error-message {
+            color: #ff4757;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #2ecc71;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+        
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember-me input {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .remember-me label {
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        
+        .forgot-password {
+            font-size: 14px;
+            color: #6a89cc;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #6a89cc, #4a69bd);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(106, 137, 204, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 137, 204, 0.6);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:disabled {
+            background: #cccccc;
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+        }
+        
+        .submit-btn:disabled:hover::before {
+            left: -100%;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .register-link a {
+            color: #6a89cc;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .success-message-container {
+            background: linear-gradient(135deg, #2ecc71, #1abc9c);
+            color: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            animation: popIn 0.5s ease-out;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            bottom: -20px;
+            right: 20px;
+            background: url('../工作室logo.jpg') no-repeat center;
+            background-size: contain;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+            border-radius: 50%;
+        }
+
+        .click-message {
+            position: absolute;
+            bottom: 70px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #ff4757;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap; 
+        }
+
+        .click-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .form-container {
+                padding: 25px 20px;
+            }
+
+            .character {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .forgot-password {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <button class="back-button" id="backButton">返回</button>
+                <h1>欢迎回来 (●'◡'●)</h1>
+                <p>宇境工作室，很高兴再次见到你！(｡･ω･｡)ﾉ♡</p>
+                <div class="character" id="floatingAvatar"></div>
+                <div class="click-message" id="clickMessage">请不要点我嘛QwQ</div>
+            </div>
+            
+            <div class="form-container">
+                <div class="success-message-container" id="successMessage">
+                    登录成功！欢迎回来！(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">用户名或邮箱(￣▽￣)~*</label>
+                        <input type="text" id="username" name="username" placeholder="请输入用户名或邮箱">
+                        <div class="error-message" id="usernameError">请输入用户名或邮箱哦(｡•́︿•̀｡)</div>
+                        <div class="success-message" id="usernameSuccess">用户名/邮箱格式正确！(◕‿◕✿)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">密码(☆_☆)</label>
+                        <div class="input-group">
+                            <input type="password" id="password" name="password" placeholder="请输入密码">
+                            <button type="button" class="show-password" id="showPassword">显示</button>
+                        </div>
+                        <div class="error-message" id="passwordError">请输入密码(´。＿。｀)</div>
+                        <div class="success-message" id="passwordSuccess">密码看起来不错！(｀・ω・´)</div>
+                    </div>
+                    
+                    <div class="remember-forgot">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">记住我</label>
+                        </div>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">立即登录 ✨</button>
+                </form>
+                
+                <div class="register-link">
+                    还没有账号？
+                    <a href="./注册.html">立即注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const successMessage = document.getElementById('successMessage');
+            const showPasswordBtn = document.getElementById('showPassword');
+            const passwordInput = document.getElementById('password');
+            const submitBtn = document.getElementById('submitBtn');
+            const usernameInput = document.getElementById('username');
+            const rememberMeCheckbox = document.getElementById('remember');
+
+                // 检查 localStorage 是否有保存的用户名
+                const savedUsername = localStorage.getItem('username');
+                const savedPassword = localStorage.getItem('password');
+                if (savedUsername) {
+                    usernameInput.value = savedUsername;
+                    passwordInput.value = savedPassword;
+                    rememberMeCheckbox.checked = true;
+                }
+
+            // 显示/隐藏密码
+            showPasswordBtn.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    showPasswordBtn.innerHTML = '隐藏';
+                } else {
+                    passwordInput.type = 'password';
+                    showPasswordBtn.innerHTML = '显示';
+                }
+            });
+            
+            // 实时验证用户名
+            usernameInput.addEventListener('input', function() {
+                validateUsername();
+                checkFormValidity();
+            });
+            
+            // 实时验证密码
+            passwordInput.addEventListener('input', function() {
+                validatePassword();
+                checkFormValidity();
+            });
+
+            // 登录表单提交
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                const rememberMe = rememberMeCheckbox.checked;
+
+                try {
+                    const res = await fetch('/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const result = await res.json();
+
+                    if (!res.ok) {
+                        alert(result.msg);
+                        return;
+                    }
+
+                    // 登录成功
+                    successMessage.style.display = 'block';
+                    form.reset();
+
+                    // 如果勾选了“记住我”，保存用户名到 localStorage
+                    if (rememberMe) {
+                        localStorage.setItem('username', username);
+                        localStorage.setItem('password', password);
+                    } else {
+                        localStorage.removeItem('username');
+                       localStorage.removeItem('password');
+                    }
+
+                    // 3秒后跳转到主页面
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                        window.location.href = './宇境·室内障碍物识别辅助反馈软件.html';
+                    }, 1000);
+
+                } catch (err) {
+                    console.error(err);
+                    alert('网络错误，请检查后端是否启动');
+                }
+            });
+
+            // 验证用户名
+            function validateUsername() {
+                const username = usernameInput.value.trim();
+                const errorElement = document.getElementById('usernameError');
+                const successElement = document.getElementById('usernameSuccess');
+                
+                if (username === '') {
+                    showError(usernameInput, errorElement, successElement, '请输入用户名或邮箱哦');
+                    return false;
+                } else {
+                    showSuccess(usernameInput, errorElement, successElement);
+                    return true;
+                }
+            }
+            
+            // 验证密码
+            function validatePassword() {
+                const password = passwordInput.value;
+                const errorElement = document.getElementById('passwordError');
+                const successElement = document.getElementById('passwordSuccess');
+                
+                if (password === '') {
+                    showError(passwordInput, errorElement, successElement, '请输入密码');
+                    return false;
+                } else {
+                    showSuccess(passwordInput, errorElement, successElement);
+                    return true;
+                }
+            }
+            
+            // 检查表单整体有效性
+            function checkFormValidity() {
+                const isUsernameValid = validateUsername();
+                const isPasswordValid = validatePassword();
+                
+                if (isUsernameValid && isPasswordValid) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            }
+            
+            // 辅助函数：显示错误状态
+            function showError(inputElement, errorElement, successElement, message) {
+                inputElement.classList.remove('valid');
+                inputElement.classList.add('invalid');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                if (successElement) successElement.style.display = 'none';
+            }
+            
+            // 辅助函数：显示成功状态
+            function showSuccess(inputElement, errorElement, successElement) {
+                inputElement.classList.remove('invalid');
+                inputElement.classList.add('valid');
+                errorElement.style.display = 'none';
+                if (successElement) successElement.style.display = 'block';
+            }
+            
+            // 辅助函数：重置所有字段样式
+            function resetAllFields() {
+                const inputs = [usernameInput, passwordInput];
+                inputs.forEach(input => {
+                    input.classList.remove('valid', 'invalid');
+                });
+                
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(element => {
+                    element.style.display = 'none';
+                });
+                
+                const successElements = document.querySelectorAll('.success-message');
+                successElements.forEach(element => {
+                    element.style.display = 'none';
+                });
+            }
+            
+            // 获取元素
+            const floatingAvatar = document.getElementById('floatingAvatar');
+            const clickMessage = document.getElementById('clickMessage');
+
+            // 创建音频元素
+            const audio = new Audio();
+            // 替换为你的音频文件路径
+            audio.src = './点击音频.mp3';
+
+            // 添加点击事件
+            floatingAvatar.addEventListener('click', function() {
+                // 显示消息
+                clickMessage.classList.add('show');
+                
+                // 播放音频
+                audio.play().catch(e => {
+                    console.log('音频播放失败:', e);
+                });
+                
+                // 3秒后隐藏消息
+                setTimeout(function() {
+                    clickMessage.classList.remove('show');
+                }, 3000);
+            });
+
+            // 获取返回按钮
+            const backButton = document.getElementById('backButton');
+
+            // 添加点击事件
+            backButton.addEventListener('click', function() {
+                // 替换为你想要的返回路径
+                window.location.href = './宇境·室内障碍物识别辅助反馈软件.html';
+            });
+        });
+    </script>
+</body>
+</html>

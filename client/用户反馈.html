@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户反馈功能</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .fb-back-btn {
+           position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #2c3e50;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .fb-back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .fb-body {
+            background-image: url('./用户反馈背景图片.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .fb-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .fb-header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 30px;
+            text-align: center;
+            color: #333;
+        }
+
+        .fb-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .fb-header p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .fb-content {
+            padding: 30px;
+        }
+
+        .fb-rating-section {
+            margin-bottom: 30px;
+        }
+
+        .fb-rating-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .fb-rating-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .fb-rating-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fb-rating-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .fb-rating-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .fb-rating-option.fb-selected {
+            border-color: #3498db;
+            background: #e1f5fe;
+        }
+
+        .fb-option-emoji {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .fb-option-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .fb-comment-section {
+            margin-bottom: 30px;
+        }
+
+        .fb-comment-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .fb-comment-hint {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #e74c3c;
+            padding: 10px;
+            background: #ffeaa7;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .fb-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border 0.3s;
+        }
+
+        .fb-textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .fb-image-upload {
+            margin-bottom: 30px;
+        }
+
+        .fb-upload-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .fb-upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .fb-upload-area:hover {
+            background: #e1f5fe;
+        }
+
+        .fb-upload-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .fb-upload-text {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .fb-upload-hint {
+            font-size: 0.9rem;
+            color: #95a5a6;
+        }
+
+        #fb-imagePreview {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        #fb-previewImage {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .fb-submit-section {
+            text-align: center;
+        }
+
+        .fb-submit-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .fb-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .fb-submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .fb-success-message {
+            display: none;
+            background: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fb-fadeIn 0.5s;
+        }
+
+        @keyframes fb-fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fb-char-count {
+            text-align: right;
+            margin-top: 5px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .fb-remove-btn {
+            margin-top: 10px; 
+            background: #e74c3c; 
+            color: white; 
+            border: none; 
+            padding: 5px 15px; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="fb-body">
+    <button class="fb-back-btn" onclick="window.location.href='./宇境·室内障碍物识别辅助反馈软件.html'">
+        <i class="fas fa-arrow-left"></i> 返回
+    </button>
+    
+    <div class="fb-container">
+    <div class="fb-container">
+        <div class="fb-header">
+            <h1><i class="fas fa-comment-dots"></i> 用户反馈</h1>
+            <p>您的意见对我们非常重要</p>
+        </div>
+        
+        <div class="fb-content">
+            <form id="fb-feedbackForm">
+                <div class="fb-rating-section">
+                    <div class="fb-rating-title">您对我们软件的评价是：</div>
+                    <div class="fb-rating-options">
+                        <div class="fb-rating-option" data-value="satisfied">
+                            <div class="fb-option-emoji">😊</div>
+                            <div class="fb-option-text">A. 满意</div>
+                        </div>
+                        <div class="fb-rating-option" data-value="very-satisfied">
+                            <div class="fb-option-emoji">😄</div>
+                            <div class="fb-option-text">B. 非常满意</div>
+                        </div>
+                        <div class="fb-rating-option" data-value="extremely-satisfied">
+                            <div class="fb-option-emoji">🤩</div>
+                            <div class="fb-option-text">C. 特别满意</div>
+                        </div>
+                        <div class="fb-rating-option" data-value="super-satisfied">
+                            <div class="fb-option-emoji">🚀</div>
+                            <div class="fb-option-text">D. 宇宙无敌超级满意</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fb-comment-section">
+                    <div class="fb-comment-title">您的宝贵意见：</div>
+                    <div class="fb-comment-hint">欢迎大家畅所欲言（轻点骂QWQ）</div>
+                    <textarea class="fb-textarea" id="fb-userComment" placeholder="请告诉我们您的想法、建议或遇到的问题..."></textarea>
+                    <div class="fb-char-count"><span id="fb-charCount">0</span>/500</div>
+                </div>
+                
+                <div class="fb-image-upload">
+                    <div class="fb-upload-title">上传图片（可选）</div>
+                    <div class="fb-upload-area" id="fb-uploadArea">
+                        <div class="fb-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="fb-upload-text">点击或拖拽图片到此处</div>
+                        <div class="fb-upload-hint">支持 JPG, PNG 格式，最大 5MB</div>
+                        <input type="file" id="fb-imageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div id="fb-imagePreview">
+                        <img id="fb-previewImage" src="" alt="预览图片">
+                        <button type="button" id="fb-removeImage" class="fb-remove-btn">移除图片</button>
+                    </div>
+                </div>
+                
+                <div class="fb-submit-section">
+                    <button type="submit" class="fb-submit-btn">
+                        <i class="fas fa-paper-plane"></i> 提交反馈
+                    </button>
+                    <div class="fb-success-message" id="fb-successMessage">
+                        <i class="fas fa-check-circle"></i> 感谢您的反馈！我们已经收到您的意见。
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratingOptions = document.querySelectorAll('.fb-rating-option');
+            const userComment = document.getElementById('fb-userComment');
+            const charCount = document.getElementById('fb-charCount');
+            const uploadArea = document.getElementById('fb-uploadArea');
+            const imageInput = document.getElementById('fb-imageInput');
+            const imagePreview = document.getElementById('fb-imagePreview');
+            const previewImage = document.getElementById('fb-previewImage');
+            const removeImageBtn = document.getElementById('fb-removeImage');
+            const feedbackForm = document.getElementById('fb-feedbackForm');
+            const successMessage = document.getElementById('fb-successMessage');
+            
+            let selectedRating = null;
+            let uploadedImage = null;
+            
+            // 评分选项选择
+            ratingOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    ratingOptions.forEach(opt => opt.classList.remove('fb-selected'));
+                    this.classList.add('fb-selected');
+                    selectedRating = this.getAttribute('data-value');
+                });
+            });
+            
+            // 字符计数
+            userComment.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                
+                if (count > 500) {
+                    charCount.style.color = '#e74c3c';
+                } else {
+                    charCount.style.color = '#7f8c8d';
+                }
+            });
+            
+            // 图片上传
+            uploadArea.addEventListener('click', function() {
+                imageInput.click();
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.background = '#e1f5fe';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.background = '#f8f9fa';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.background = '#f8f9fa';
+                
+                if (e.dataTransfer.files.length) {
+                    handleImageUpload(e.dataTransfer.files[0]);
+                }
+            });
+            
+            imageInput.addEventListener('change', function() {
+                if (this.files.length) {
+                    handleImageUpload(this.files[0]);
+                }
+            });
+            
+            function handleImageUpload(file) {
+                // 检查文件类型和大小
+                if (!file.type.match('image.*')) {
+                    alert('请上传图片文件！');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('图片大小不能超过5MB！');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    uploadedImage = file;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // 移除图片
+            removeImageBtn.addEventListener('click', function() {
+                imagePreview.style.display = 'none';
+                previewImage.src = '';
+                imageInput.value = '';
+                uploadedImage = null;
+            });
+            
+            // 表单提交
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!selectedRating) {
+                    alert('请选择您对我们的评价！');
+                    return;
+                }
+                
+                if (!userComment.value.trim()) {
+                    alert('请填写您的反馈意见！');
+                    return;
+                }
+                
+                if (userComment.value.length > 500) {
+                    alert('反馈内容不能超过500个字符！');
+                    return;
+                }
+                
+                // 模拟提交成功
+                successMessage.style.display = 'block';
+                feedbackForm.reset();
+                ratingOptions.forEach(opt => opt.classList.remove('fb-selected'));
+                imagePreview.style.display = 'none';
+                charCount.textContent = '0';
+                selectedRating = null;
+                uploadedImage = null;
+                
+                // 3秒后隐藏成功消息
+                setTimeout(() => {
+                    window.location.href = './宇境·室内障碍物识别辅助反馈软件.html';
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
