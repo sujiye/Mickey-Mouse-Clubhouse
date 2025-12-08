@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Detection Stream</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+        #videoFeed { border: 1px solid #ccc; max-width: 80%; height: auto; }
+        #info { margin-top: 20px; text-align: left; width: 80%; }
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>YOLO Detection Stream</h1>
+    <img id="videoFeed" src="" alt="YOLO Detection Stream">
+    <div id="info">
+        <h2>Frame Information:</h2>
+        <p><strong>Timestamp:</strong> <span id="timestamp">N/A</span></p>
+        <p><strong>Frame Number:</strong> <span id="frameNumber">N/A</span></p>
+        <p><strong>FPS:</strong> <span id="fps">N/A</span></p>
+        <h2>Detection Results:</h2>
+        <pre id="detectionResults">No detections yet.</pre>
+    </div>
+
+    <script>
+        const videoFeed = document.getElementById('videoFeed');
+        const timestampSpan = document.getElementById('timestamp');
+        const frameNumberSpan = document.getElementById('frameNumber');
+        const fpsSpan = document.getElementById('fps');
+        const detectionResultsPre = document.getElementById('detectionResults');
+
+        const ws = new WebSocket('ws://localhost:8765');
+
+        ws.onopen = () => {
+            console.log('Connected to WebSocket server');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            if (data.image_base64) {
+                videoFeed.src = 'data:image/jpeg;base64,' + data.image_base64;
+            }
+            if (data.timestamp) {
+                timestampSpan.textContent = new Date(data.timestamp * 1000).toLocaleString();
+            }
+            if (data.frame_number !== undefined) {
+                frameNumberSpan.textContent = data.frame_number;
+            }
+            if (data.fps !== undefined) {
+                fpsSpan.textContent = data.fps.toFixed(2);
+            }
+            if (data.detections) {
+                detectionResultsPre.textContent = JSON.stringify(data.detections, null, 2);
+            } else {
+                detectionResultsPre.textContent = 'No detections for this frame.';
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            videoFeed.src = ''; // Clear image on disconnect
+            timestampSpan.textContent = 'N/A';
+            frameNumberSpan.textContent = 'N/A';
+            fpsSpan.textContent = 'N/A';
+            detectionResultsPre.textContent = 'Disconnected. No detections.';
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            detectionResultsPre.textContent = 'WebSocket error occurred.';
+        };
+    </script>
+</body>
+</html>
